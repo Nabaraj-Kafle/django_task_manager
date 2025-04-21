@@ -1,0 +1,25 @@
+{% extends 'synapp/base.html' %}
+
+{% block title %}Register | SynTask{% endblock %}
+
+{% block content %}
+<div class="logcon">
+  <div class="leftside logpage">
+    <h1>Welcome to SynTask</h1>
+    <h4>Manage your tasks and projects efficiently.</h4>
+  </div>
+
+  <div class="rightside logpage">
+    <h2 class="logrig">Create an Account</h2>
+    <p class="logrig">Start managing your tasks efficiently</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Register</button>
+    </form>
+
+    <p class="logrig">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+  </div>
+</div>
+{% endblock %}

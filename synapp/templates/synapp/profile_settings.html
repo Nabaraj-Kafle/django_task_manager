@@ -1,0 +1,16 @@
+
+{% extends 'synapp/base.html' %}
+
+{% block title %}profile settings{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: auto;">
+  <h2 class="ding">👤 Edit Profile</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">💾 Save Changes</button>
+  </form>
+  <a href="{% url 'dashboard' %}">⬅️ Back to Dashboard</a>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SynTask{% endblock %}</title>
+    
+    <!-- Add your custom CSS files here -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- FontAwesome or any icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+</head>
+<body>
+    
+    <!-- Header Section (Logo, Navigation) -->
+    <header>
+        <nav>
+            <!-- <div class="logo">
+                <a href="{% url 'dashboard' %}"><img src="{% static 'images/syntask-logo.png' %}" alt="SynTask Logo"></a>
+            </div> -->
+           
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer Section (Optional) -->
+    {% if user.is_authenticated %}
+  <div class="sidebar">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+          <img src="{% static 'images/logo.png' %}" alt="SynTask Logo">
+          <h2>SynTask</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="{% url 'dashboard' %}" >🏠 Dashboard</a>
+          <a href="{% url 'task-create' %}">📝 Create Task</a>
+          <a href="{% url 'project-create' %}">📁 Create Project</a>
+          <!-- <a href="{% url 'projects' %}">📂 Projects</a> -->
+          <a href="{% url 'profile-settings' %}">👤 Profile</a>
+          <a href="{% url 'password_change' %}">🔐 Change Password</a>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="logout-btn">🚪 Logout</button>
+          </form>
+        </nav>
+      </aside>
+  </div>
+  {% endif %}
+    
+</body>
+</html>

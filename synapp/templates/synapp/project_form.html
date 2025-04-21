@@ -1,0 +1,12 @@
+{% extends 'synapp/base.html' %}
+
+{% block title %}Create Task | SynTask{% endblock %}
+
+{% block content %}
+<h1 class="ding" style="margin-left: 600px;">Create New Project</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

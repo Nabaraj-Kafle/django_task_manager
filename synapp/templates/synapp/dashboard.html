@@ -1,0 +1,130 @@
+{% extends 'synapp/base.html' %}
+{% load static %}
+{% block title %}Dashboard | SynTask{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="{% static 'images/logo.png' %}" alt="SynTask Logo">
+      <h2>SynTask</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{% url 'dashboard' %}" >🏠 Dashboard</a>
+      <a href="{% url 'task-create' %}">📝 Create Task</a>
+      <a href="{% url 'project-create' %}">📁 Create Project</a>
+      <!-- <a href="{% url 'projects' %}">📂 Projects</a> -->
+      <a href="{% url 'profile-settings' %}">👤 Profile</a>
+      <a href="{% url 'password_change' %}">🔐 Change Password</a>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="logout-btn">🚪 Logout</button>
+      </form>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="dashboard-header">
+      <div class="user-info">
+        <h2>Welcome, {{ request.user.username }} 👋</h2>
+      </div>
+      <form method="get" class="dashboard-search">
+        <!-- <input type="text" name="search" placeholder="Search tasks..." /> -->
+      </form>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a class="btn-link" href="{% url 'task-create' %}">➕ Add Task</a>
+      <a class="btn-link" href="{% url 'project-create' %}">📁 Add Project</a>
+    </div>
+
+    <!-- Task Summary -->
+    <div class="summary-section">
+      <h3>Task Summary</h3>
+      <ul class="summary-list">
+        <li class="status-card">
+          <span>🕐 Not Started</span>
+          <div>{{ not_started_count }}</div>
+        </li>
+        <li class="status-card">
+          <span>🔧 In Progress</span>
+          <div>{{ in_progress_count }}</div>
+        </li>
+        <li class="status-card">
+          <span>✅ Completed</span>
+          <div>{{ completed_count }}</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Filter -->
+    <form method="get" class="filter-form">
+      <select name="status" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        <option value="Not Started" {% if request.GET.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+        <option value="In Progress" {% if request.GET.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+        <option value="Completed" {% if request.GET.status == 'Completed' %}selected{% endif %}>Completed</option>
+      </select>
+    </form>
+
+    <!-- Tasks -->
+    <section class="task-list">
+      <h3>Your Tasks 📝</h3>
+      {% if tasks %}
+        <ul>
+          {% for task in tasks %}
+            <li class="task-card">
+              <div class="task-header">
+                <strong>{{ task.title }}</strong>
+                <small>{{ task.status }} | Due: {{ task.due_date }}</small>
+              </div>
+              <div class="task-meta">
+                {% if task.project %}
+                  <em>Project: {{ task.project.name }}</em>
+                {% endif %}
+                <div class="task-actions">
+                  <a href="{% url 'task-update' task.id %}">✏️ Edit</a> |
+                  <a href="{% url 'task-delete' task.id %}">🗑 Delete</a>
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No tasks found.</p>
+      {% endif %}
+    </section>
+
+    <!-- Project Progress -->
+    <section class="project-progress">
+      <h3>Project Progress 📈</h3>
+      {% for project in project_progress %}
+        <div class="progress-wrapper">
+          <strong>{{ project.name }}</strong>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: {{ project.percentage }}%;">{{ project.percentage }}%</div>
+          </div>
+        </div>
+      {% endfor %}
+    </section>
+
+    <!-- Projects -->
+    <section class="project-list">
+      <h3>Your Projects 📁</h3>
+      <ul>
+        {% for project in projects %}
+          <li>
+            <strong>{{ project.name }}</strong>
+            <a href="{% url 'project-delete' project.id %}">🗑 Delete Project</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+  </main>
+</div>
+{% endblock %}
